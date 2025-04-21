@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       subject: `New Contact Message from ${name}`,
       text: `
 Name: ${name}
-Email:${mail}
+Email:${email}
 Contact: ${contact}
 Message: ${message}
       `
