@@ -1,6 +1,6 @@
-import nodemailer from 'nodemailer';
-import formidable from 'formidable';
+import { IncomingForm } from 'formidable';
 import fs from 'fs';
+import nodemailer from 'nodemailer';
 
 export const config = {
   api: {
@@ -9,22 +9,16 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-  // Allow CORS for GitHub Pages frontend
   res.setHeader('Access-Control-Allow-Origin', 'https://vai93.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Handle preflight request
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const form = new formidable.IncomingForm();
+  const form = new IncomingForm();
 
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
+  form.parse(req, async (err, fields, files) => {    if (err) {
       console.error(err);
       return res.status(500).json({ message: 'Form parsing error' });
     }
