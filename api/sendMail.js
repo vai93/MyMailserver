@@ -8,24 +8,30 @@ export const config = {
   },
 };
 
-export default async function handler(req, res) {
-  // Allow CORS
+// Utility to set CORS headers
+function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Origin', 'https://vai93.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+}
 
-  // Handle preflight request
+export default async function handler(req, res) {
+  setCorsHeaders(res); // Set CORS on top
+
+  // Handle preflight
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  if (req.method !== 'POST') return res.status(405).send('Method not allowed');
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
   const form = new formidable.IncomingForm();
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
-      console.error(err);
+      console.error('Form error:', err);
       return res.status(500).json({ message: 'Form parsing error' });
     }
 
@@ -36,7 +42,7 @@ export default async function handler(req, res) {
       service: 'gmail',
       auth: {
         user: 'MyMail0693@gmail.com',
-        pass: 'vtderehxcmyqeznp', // Make sure to keep this secret in production
+        pass: 'vtderehxcmyqeznp',
       },
     });
 
@@ -61,7 +67,7 @@ Message: ${message}
       await transporter.sendMail(mailOptions);
       res.status(200).json({ message: 'Feedback sent successfully!' });
     } catch (err) {
-      console.error(err);
+      console.error('Email error:', err);
       res.status(500).json({ message: 'Failed to send email.' });
     }
   });
