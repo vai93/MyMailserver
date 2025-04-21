@@ -45,12 +45,12 @@ export default async function handler(req, res) {
     });
 
     const mailOptions = {
-      from: `"${name} via Website Contact" <MyMail0693@gmail.com>`,
+      from: `"${name} via Website " <MyMail0693@gmail.com>`,
       to: recipientEmail,
       subject: `New Contact Message from ${name}`,
       text: `
 Name: ${name}
-Email:${email}
+Email: ${email}
 Contact: ${contact}
 Message: ${message}
       `
