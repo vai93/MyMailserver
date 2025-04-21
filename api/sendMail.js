@@ -9,7 +9,7 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://vai93.github.io');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -35,25 +35,20 @@ export default async function handler(req, res) {
     });
 
     const mailOptions = {
-      from: '"UKF/ISC Feedback" <MyMail0693@gmail.com>',
+      from: `"${name} via Website Contact" <MyMail0693@gmail.com>`,
       to: email,
-      subject: `Feedback from ${name}`,
+      subject: `New Contact Message from ${name}`,
       text: `
 Name: ${name}
+Email:${mail}
 Contact: ${contact}
-Rating: ${rating}
-Feedback: ${feedback}
 Message: ${message}
-      `,
-      attachments: resumeFile ? [{
-        filename: resumeFile.originalFilename,
-        content: fs.readFileSync(resumeFile.filepath)
-      }] : []
+      `
     };
 
     try {
       await transporter.sendMail(mailOptions);
-      res.status(200).json({ message: 'Feedback sent successfully!' });
+      res.status(200).json({ message: 'Mail sent successfully!' });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Failed to send email.' });
