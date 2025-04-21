@@ -1,7 +1,11 @@
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import nodemailer from 'nodemailer';
-
+const allowedOrigins = [
+  'https://vai93.github.io',
+  'https://vai93.github.io/ISC',
+  'https://vai93.github.io/UKF'
+];
 export const config = {
   api: {
     bodyParser: false,
@@ -9,7 +13,10 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+  res.setHeader('Access-Control-Allow-Origin', origin);
+}
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
