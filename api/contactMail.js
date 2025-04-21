@@ -23,7 +23,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ message: 'Form parsing error' });
     }
 
-    const { email, message, feedback, rating, contact, name } = fields;
+    const { email, message,  contact, name } = fields;
     const resumeFile = files.resume;
 
     const transporter = nodemailer.createTransport({
