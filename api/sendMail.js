@@ -8,30 +8,24 @@ export const config = {
   },
 };
 
-// Utility to set CORS headers
-function setCorsHeaders(res) {
+export default async function handler(req, res) {
+  // Allow CORS for GitHub Pages frontend
   res.setHeader('Access-Control-Allow-Origin', 'https://vai93.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-}
 
-export default async function handler(req, res) {
-  setCorsHeaders(res); // Set CORS on top
-
-  // Handle preflight
+  // Handle preflight request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+  if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
   const form = new formidable.IncomingForm();
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
-      console.error('Form error:', err);
+      console.error(err);
       return res.status(500).json({ message: 'Form parsing error' });
     }
 
@@ -67,7 +61,7 @@ Message: ${message}
       await transporter.sendMail(mailOptions);
       res.status(200).json({ message: 'Feedback sent successfully!' });
     } catch (err) {
-      console.error('Email error:', err);
+      console.error(err);
       res.status(500).json({ message: 'Failed to send email.' });
     }
   });
