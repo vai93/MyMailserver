@@ -23,9 +23,12 @@ export default async function handler(req, res) {
       return res.status(500).json({ message: 'Form parsing error' });
     }
 
-    const { email, message,  contact, name } = fields;
-    const resumeFile = files.resume;
-
+    const { email, message, feedback, rating, contact, name, websiteId } = fields;
+    const recipients = {
+      UKF: 'VKPATEL93@gmail.com', 
+      ISC: 'arpatel053@gmail.com', 
+    };
+    const recipientEmail = recipients[websiteId];
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -36,7 +39,7 @@ export default async function handler(req, res) {
 
     const mailOptions = {
       from: `"${name} via Website Contact" <MyMail0693@gmail.com>`,
-      to: email,
+      to: recipientEmail,
       subject: `New Contact Message from ${name}`,
       text: `
 Name: ${name}
